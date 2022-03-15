@@ -28,9 +28,11 @@ contract NFTBidding {
 
     // Function for burning nft
     function burn(uint _id) public {
+
         require(nftMap[_id].id > 0, "NFT does not exists");     // Checks if NFT of given id exists or not
         require(nftMap[_id].owner == msg.sender, "You are not owner of this NFT, you cannot burn it.");     // Check the owner of NFT is same as burner
         delete nftMap[_id];     // Removes from the Map
+        
     }
 
 }
