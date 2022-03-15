@@ -17,10 +17,10 @@ contract NFTBidding {
     }
 
     // For maintaing uniqueness of NFT, each time new id will be generated
-    uint idCounter = 1;
+    uint public nftCounter = 0;
     
     // For mapping id of each nft to its Structure Instance
-    mapping(uint => NFT) nftMap;
+    mapping(uint => NFT) public nftMap;
 
     // Function modifier for checking if modifier of NFT is owner or not
     modifier restrictedToOwner(uint _id) {
@@ -35,16 +35,18 @@ contract NFTBidding {
     }
 
     // Function for minting nft 
-    function mint(string memory _name, uint _price) public {
-        require(nftMap[idCounter].id == 0, "NFT with same id already exists");  // checks if there already exist nft of same id
-        NFT memory newNFT = NFT(idCounter, _name, msg.sender, _price);  // creates new NFT using passes parameters and msg.sender
-        nftMap[idCounter] = newNFT;     // adds newly created NFT into nftMap
-        idCounter++;           // Increments idCounter for maintaining uniqueness
+    function mint(uint _id, string memory _name, uint _price) public {
+        require(_id > 0, "id of NFT cannot be less than 1");
+        require(nftMap[_id].id == 0, "NFT with same id already exists");  // checks if there already exist nft of same id
+        NFT memory newNFT = NFT(_id, _name, msg.sender, _price);  // creates new NFT using passes parameters and msg.sender
+        nftMap[_id] = newNFT;     // adds newly created NFT into nftMap
+        nftCounter++;           // Increments idCounter for maintaining uniqueness
     }
 
     // Function for burning nft
     function burn(uint _id) public nftExists(_id) restrictedToOwner(_id) {
         delete nftMap[_id];     // Removes from the Map
+        nftCounter--;
     }
 
 
